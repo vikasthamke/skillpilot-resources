@@ -186,7 +186,7 @@ svg { flex-shrink: 0; }
 .text-link svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .text-link:hover { color: var(--text); }
 
-.loading, .empty, .notice { color: var(--muted); padding: 24px; border: 1px dashed var(--border-strong); border-radius: var(--radius); text-align: center; }
+.empty { color: var(--muted); padding: 24px; border: 1px dashed var(--border-strong); border-radius: var(--radius); text-align: center; }
 
 /* How-to */
 .steps { counter-reset: step; list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
