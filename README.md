@@ -10,6 +10,7 @@ Plain HTML, CSS and JavaScript, hosted on GitHub Pages. No build step, no framew
 index.html               page structure and copy
 assets/css/styles.css    styles (brand colours are CSS variables at the top)
 assets/js/main.js        renders the workbook cards from the JSON file
+assets/images/           logo mark (header + favicon), Apple touch icon, 1200×630 social preview
 data/workbooks.json      single source of truth: site links + every workbook
 WORKBOOK_AUDIT.md        audit of the GitHub account that the listing is based on
 .nojekyll                tells GitHub Pages to serve the files as they are
