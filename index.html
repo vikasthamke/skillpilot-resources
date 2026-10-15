@@ -38,20 +38,29 @@
 
   <main>
     <section class="hero" aria-labelledby="hero-title">
-      <div class="container">
-        <p class="eyebrow">Free practice workbooks</p>
-        <h1 id="hero-title">Stop Just Watching. <span class="grad">Start Practicing.</span></h1>
-        <p class="lede">Build practical tech skills through free, hands-on workbooks, coding challenges, and structured exercises.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#workbooks">Explore Practice Workbooks</a>
-          <a class="btn btn-ghost" href="#" target="_blank" rel="noopener noreferrer" data-youtube-link hidden>Explore SkillPilot on YouTube</a>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">SkillPilot · Free practice workbooks</p>
+          <h1 id="hero-title">Stop Just Watching. <span class="grad">Start Practicing.</span></h1>
+          <p class="lede">Build practical tech skills through free, hands-on workbooks, coding challenges, and structured exercises.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#workbooks">Explore Practice Workbooks</a>
+            <a class="btn btn-ghost" href="#" target="_blank" rel="noopener noreferrer" data-youtube-link hidden>
+              <svg class="yt-icon" viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="5" fill="#FF0000"/><path d="M11.2 5.6v8.8l7.4-4.4z" fill="#fff"/></svg>
+              Explore on YouTube<span class="visually-hidden"> (opens in a new tab)</span>
+            </a>
+          </div>
+          <ul class="free-points" aria-label="Access">
+            <li>Free to access</li>
+            <li>No sign-up or email</li>
+            <li>Hosted on GitHub</li>
+          </ul>
+          <p class="hero-stats" data-stats aria-live="polite"></p>
         </div>
-        <ul class="free-points" aria-label="Access">
-          <li>Free to access</li>
-          <li>No sign-up or email</li>
-          <li>Hosted on GitHub</li>
-        </ul>
-        <p class="hero-stats" data-stats aria-live="polite"></p>
+        <div class="hero-visual">
+          <div class="hero-emblem" aria-hidden="true"></div>
+          <p class="hero-tagline">Navigate Your Skills. Build Your Future.</p>
+        </div>
       </div>
     </section>
 
@@ -112,13 +121,19 @@
       </div>
     </section>
 
-    <section class="section section-alt" aria-labelledby="yt-title" data-youtube-section hidden>
-      <div class="container yt">
-        <div>
-          <h2 id="yt-title">Learn how to practise, not just what to practise</h2>
-          <p>SkillPilot on YouTube covers learning guidance, practice strategies, tutorials and project resources that go with these workbooks.</p>
+    <section class="section section-yt" aria-labelledby="yt-title" data-youtube-section hidden>
+      <div class="container">
+        <div class="yt-panel">
+          <svg class="yt-badge" viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="5" fill="#FF0000"/><path d="M11.2 5.6v8.8l7.4-4.4z" fill="#fff"/></svg>
+          <div class="yt-copy">
+            <h2 id="yt-title">Keep Learning with SkillPilot</h2>
+            <p>Explore tutorials, practical learning strategies, coding practice, and resources to help you build real technology skills.</p>
+          </div>
+          <a class="btn btn-light" href="#" target="_blank" rel="noopener noreferrer" data-youtube-link>
+            <svg class="yt-icon" viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="5" fill="#FF0000"/><path d="M11.2 5.6v8.8l7.4-4.4z" fill="#fff"/></svg>
+            Subscribe on YouTube<span class="visually-hidden"> (opens in a new tab)</span>
+          </a>
         </div>
-        <a class="btn btn-primary" href="#" target="_blank" rel="noopener noreferrer" data-youtube-link>Explore SkillPilot on YouTube</a>
       </div>
     </section>
   </main>

@@ -10,7 +10,7 @@ Plain HTML, CSS and JavaScript, hosted on GitHub Pages. No build step, no framew
 index.html               page structure and copy
 assets/css/styles.css    styles (brand colours are CSS variables at the top)
 assets/js/main.js        renders the workbook cards from the JSON file
-assets/images/           logo mark (header + favicon), Apple touch icon, 1200×630 social preview
+assets/images/           logo mark (header + favicon), desktop hero emblem, Apple touch icon, 1200×630 social preview
 data/workbooks.json      single source of truth: site links + every workbook
 WORKBOOK_AUDIT.md        audit of the GitHub account that the listing is based on
 .nojekyll                tells GitHub Pages to serve the files as they are
@@ -92,6 +92,6 @@ Repository → **Settings → Pages** shows the live address: https://vikasthamk
 
 In `data/workbooks.json → site`:
 
-- `youtubeUrl` — **empty until you add your channel URL** (for example `https://www.youtube.com/@yourhandle`). While it is empty, the YouTube button, section and footer link stay hidden. Once set, all three appear.
+- `youtubeUrl` — the SkillPilot channel, `https://www.youtube.com/@TheSkillPilot`. It feeds the hero "Explore on YouTube" button, the "Keep Learning with SkillPilot" section and the footer link. If you empty it, all three are hidden.
 - `githubProfileUrl` — header and footer GitHub links.
 - `showSearchFromCount` — the search box and subject filters (and grouping by subject) appear once this many workbooks are published. Default `6`.

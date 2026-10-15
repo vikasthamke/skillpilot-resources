@@ -43,9 +43,7 @@ are not shown.
 
 ## 4. Missing information
 
-- **YouTube channel URL** — not found on the GitHub profile or in local SkillPilot projects (the brand config names the
-  channel "SkillPilot" but has no URL). The page keeps it in `data/workbooks.json → site.youtubeUrl`; while it is empty,
-  every YouTube link and the YouTube section stay hidden, so no visitor is sent to a wrong channel.
-- **Social preview image** — no suitable image exists, so no `og:image` is set. Links still preview with title and description.
+- **YouTube channel URL** — resolved: the owner supplied `https://www.youtube.com/@TheSkillPilot`. It was checked on 2026-10-15: HTTP 200, and the channel title is "SkillPilot".
+- **Social preview image** — resolved: `assets/images/og-image.png` (1200×630) was made from the SkillPilot logo.
 - **Pandas/NumPy difficulty labels** — the READMEs describe progression (fundamentals → testing/interview-style) but give
   no per-task levels, so the cards describe the progression rather than a single difficulty.

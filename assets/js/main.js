@@ -53,7 +53,7 @@
       (facts ? '<dl class="facts">' + facts + "</dl>" : "") +
       '<div class="card-actions">' +
       '<a class="btn btn-primary" href="' + esc(repo) + '" target="_blank" rel="noopener noreferrer">Open Workbook<span class="visually-hidden">: ' + esc(w.title) + " on GitHub (opens in a new tab)</span></a>" +
-      (zip ? '<a class="text-link" href="' + esc(zip) + '">Download ZIP<span class="visually-hidden"> of ' + esc(w.title) + "</span></a>" : "") +
+      (zip ? '<a class="text-link" href="' + esc(zip) + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>Download ZIP<span class="visually-hidden"> of ' + esc(w.title) + "</span></a>" : "") +
       "</div></li>";
   }
 
