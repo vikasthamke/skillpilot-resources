@@ -13,12 +13,12 @@ keys, private-key blocks, Slack tokens): **no matches**. The `main.zip` download
 | Pandas Practice Workbook | [pandas-practice-workbook](https://github.com/vikasthamke/pandas-practice-workbook) | Public, MIT | 75 challenges: Learning tasks 1–44, Testing tasks 45–74, final Customer Value & Retention challenge (task 75). Hints and solutions via `practice_system.py`. 5 CSV datasets in `data/` (customers, products, orders, order_items, student_performance). | Python 3, `pip install -r requirements.txt` (pandas, numpy, jupyter, ipykernel). Needs the whole repo: `data/` + `practice_system.py`. |
 | SQL Practice Workbook | [sql-practice-workbook](https://github.com/vikasthamke/sql-practice-workbook) | Public, MIT | 171 questions in 12 modules (33 Easy, 65 Medium, 50 Hard, 23 Advanced), 3 role capstones, a 16-question final assessment, on a 32-table synthetic SaaS dataset. Validated on PostgreSQL 18.6 and MySQL 8.4.11. Setup scripts, CSVs, per-engine solution files, `sql_practice.py` helper. | Requires a local **PostgreSQL 16+ or MySQL 8.0+**; load `setup.sql` / `setup_mysql.sql`. Python packages are optional. README has full database setup steps. |
 
-## 2. Needs minor improvements (listed anyway — the issues do not block use)
+## 2. Needed minor improvements — resolved 2026-10-15
 
-| Workbook | Repository | Issue found | Suggested fix (not applied — needs your OK) |
-|---|---|---|---|
-| NumPy Practice Workbook | [numpy-practice-workbook](https://github.com/vikasthamke/numpy-practice-workbook) | `requirements.txt` contains only `Jupyter`. `practice_system.py` does `import numpy as np`, and the `jupyter` package does not depend on NumPy (checked with a pip dry-run: 97 packages, no numpy). A learner who follows the README in a fresh virtual environment gets `ModuleNotFoundError: numpy`. | Add `numpy` (and `ipykernel`) to `requirements.txt`. One-line change. The resource page card already tells learners to install NumPy and Jupyter. |
-| Python Practice Workbook | python-practice-workbook | (a) No `LICENSE` file — the work is free to read and download, but visitors have no stated permission to reuse it (the other three are MIT). (b) The Installation section starts with `cd python-practice-workbook` but never says how to download/clone it. | (a) Add a LICENSE if you want reuse allowed. (b) Add a `git clone …` / Download ZIP step before `cd`. |
+| Workbook | Issue found | Fix (pushed) |
+|---|---|---|
+| [NumPy Practice Workbook](https://github.com/vikasthamke/numpy-practice-workbook) | `requirements.txt` listed only `Jupyter`, which does not install NumPy, so a fresh virtual environment failed with `ModuleNotFoundError: numpy`. | `requirements.txt` is now `numpy`, `jupyter`, `ipykernel` (commit 22bfe3e). Verified in a fresh venv: all 70 notebook code cells execute without errors. |
+| [Python Practice Workbook](https://github.com/vikasthamke/python-practice-workbook) | (a) No `LICENSE`. (b) Installation started with `cd` but never said how to get the code. | (a) MIT licence added, matching the other workbooks (03e626c). (b) Clone / Download ZIP step added (21255a8). |
 
 The NumPy workbook is otherwise complete: 67 tasks (Learning 1–38, Testing 39–66, final Factory Health Dashboard
 task 67), MIT licence, and the Smart Factory dataset is generated in code by `practice_system.load_dataset()`
