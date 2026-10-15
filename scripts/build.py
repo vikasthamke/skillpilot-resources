@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Write the workbook directory from data/workbooks.json into index.html.
 
-The cards, the hero count and the GitHub/YouTube links are plain HTML, so the page
+It also stamps the CSS/JS URLs with a content hash (?v=...) so browsers never mix a new page
+with a cached old script. The cards, the hero count and the GitHub/YouTube links are plain HTML, so the page
 works for every visitor, crawler and link preview, with or without JavaScript.
 assets/js/main.js only adds search and filtering on top of the generated cards.
 
@@ -10,6 +11,7 @@ assets/js/main.js only adds search and filtering on top of the generated cards.
 
 Standard library only (Python 3.8+).
 """
+import hashlib
 import html
 import json
 import re
@@ -156,6 +158,16 @@ def set_links(page, attr, url):
     return re.sub(rf"<[a-z]+\b[^>]*\b{attr}\b[^>]*>", fix, page)
 
 
+def version_assets(page):
+    """Add a content hash to the CSS/JS URLs so a new deploy never pairs new HTML with a cached old script."""
+    for rel in ("assets/css/styles.css", "assets/js/main.js"):
+        digest = hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()[:10]
+        page, n = re.subn(rf'"{re.escape(rel)}(?:\?v=[0-9a-f]*)?"', f'"{rel}?v={digest}"', page)
+        if n != 1:
+            sys.exit(f"index.html should reference {rel} exactly once (found {n})")
+    return page
+
+
 def build():
     data, labels, published = load()
     site = data.get("site", {})
@@ -167,6 +179,7 @@ def build():
     github = safe_url(site.get("githubProfileUrl"), GITHUB) or "https://github.com/vikasthamke"
     page = set_links(page, "data-github-link", github)
     page = set_links(page, r"data-youtube-(?:link|section|item)", safe_url(site.get("youtubeUrl"), YOUTUBE))
+    page = version_assets(page)
     return page, published
 
 
