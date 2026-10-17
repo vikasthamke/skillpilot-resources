@@ -23,10 +23,6 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "workbooks.json"
 INDEX = ROOT / "index.html"
 
-ICONS = {  # workbook cards have no icon since the compact redesign; roadmaps use this one
-    "roadmap": '<circle cx="6" cy="18.5" r="2.5"/><circle cx="18" cy="5.5" r="2.5"/><path d="M8.5 18.5H15a3.25 3.25 0 0 0 0-6.5H9a3.25 3.25 0 0 1 0-6.5h6.5"/>',
-}
-OPEN_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>'
 DOWNLOAD_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>'
 
 
@@ -142,31 +138,19 @@ def card(w, labels, heading):
 
 
 def roadmap_card(r, labels, heading):
-    label = labels[r["category"]]
-    skills = "".join(f"<li>{esc(s)}</li>" for s in r.get("skills", []))
-    size_mb = r["_size"] / 1_000_000
-    fmt = f"PDF · {r['_pages']} pages · {size_mb:.1f} MB"
-    facts = f"<div><dt>Format</dt><dd>{esc(fmt)}</dd></div>"
-    if r.get("includes"):
-        facts += f"<div><dt>Includes</dt><dd>{esc(r['includes'])}</dd></div>"
+    """Same square card as a workbook: title, count, short description, open + download links."""
     digest = hashlib.sha256(r["_path"].read_bytes()).hexdigest()[:10]
     href = f"{r['fileUrl']}?v={digest}"
     title = esc(r["title"])
+    size = f"PDF, {r['_pages']} pages, {r['_size'] / 1_000_000:.1f} MB"
     return (
-        f'<li class="card card-roadmap">'
-        f'<div class="card-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24">{ICONS["roadmap"]}</svg></span>'
-        f'<div><div class="card-meta"><span class="badge">{esc(label)}</span>'
-        + (f'<span class="level">{esc(r["difficulty"])}</span>' if r.get("difficulty") else "")
-        + "</div>"
-        + (f'<p class="count">{esc(r["countLabel"])}</p>' if r.get("countLabel") else "")
-        + "</div></div>"
+        f'<li class="card card-wb card-roadmap">'
         f"<{heading}>{title}</{heading}>"
-        f'<p class="desc">{esc(r["description"])}</p>'
-        + (f'<ul class="skills" aria-label="Topics covered">{skills}</ul>' if skills else "")
-        + f'<dl class="facts">{facts}</dl>'
+        + (f'<p class="count">{esc(r["countLabel"].split(" · ")[0])}</p>' if r.get("countLabel") else "")
+        + f'<p class="desc">{esc(r.get("shortDescription") or r["description"])}</p>'
         + '<div class="card-actions">'
-        f'<a class="btn btn-primary" href="{esc(href)}" target="_blank" rel="noopener">{OPEN_ICON}Open Roadmap<span class="visually-hidden">: {title} PDF (opens in a new tab)</span></a>'
-        f'<a class="text-link" href="{esc(href)}" download="{esc(r["_path"].name)}">{DOWNLOAD_ICON}Download PDF<span class="visually-hidden"> of {title}</span></a>'
+        f'<a class="btn btn-primary" href="{esc(href)}" target="_blank" rel="noopener">Open Roadmap<span class="visually-hidden">: {title}, {esc(size)} (opens in a new tab)</span></a>'
+        f'<a class="text-link" href="{esc(href)}" download="{esc(r["_path"].name)}">{DOWNLOAD_ICON}Download PDF<span class="visually-hidden"> of {title}, {esc(size)}</span></a>'
         + "</div></li>"
     )
 
@@ -175,7 +159,7 @@ def roadmap_directory(labels, roadmaps):
     if not roadmaps:
         return '<p class="empty">New roadmaps are on the way.</p>'
     items = "\n".join("            " + roadmap_card(r, labels, "h4") for r in roadmaps)
-    return f'<ul class="grid">\n{items}\n          </ul>'
+    return f'<ul class="grid grid-wb">\n{items}\n          </ul>'
 
 
 def directory(data, labels, published):

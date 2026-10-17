@@ -92,15 +92,17 @@ Roadmaps are PDFs hosted on this site. They appear under the **Roadmaps** toggle
   "countLabel": "9 stages · 4 portfolio projects · 12-week plan",
   "difficulty": "Beginner-friendly",
   "description": "What the roadmap covers, in one or two sentences.",
+  "shortDescription": "One short line for the card (keep it to about 60 characters if the title wraps).",
   "skills": ["Python & data libraries", "Model evaluation"],
   "includes": "What is inside the PDF",
   "fileUrl": "roadmaps/SkillPilot_Machine_Learning_Roadmap.pdf"
 }
 ```
 
-`fileUrl` must point to a `.pdf` inside `roadmaps/` that exists; the build stops otherwise. The page count and file size on the
-card ("PDF · 24 pages · 1.4 MB") are read from the file, and the link carries a content hash (`?v=…`), so replacing the PDF
-with a new version and rebuilding is enough to update it everywhere.
+Roadmap cards use the same square layout as workbook cards: title, the first part of `countLabel`, `shortDescription`,
+"Open Roadmap" and "Download PDF". `fileUrl` must point to a `.pdf` inside `roadmaps/` that exists; the build stops otherwise.
+The page count and file size are read from the file for screen-reader link text, and the link carries a content hash
+(`?v=…`), so replacing the PDF with a new version and rebuilding is enough to update it everywhere.
 
 ### Roadmaps / Workbooks toggle
 

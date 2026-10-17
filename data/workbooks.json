@@ -95,6 +95,7 @@
       "countLabel": "9 stages · 4 portfolio projects · 12-week plan",
       "difficulty": "Beginner-friendly",
       "description": "A step-by-step path from Python fundamentals to real-world ML projects: what to learn first, how much math you need, which algorithms matter, how to evaluate models honestly and how to deploy one. Every stage ends with a practice task and a readiness checkpoint.",
+      "shortDescription": "A step-by-step path from Python basics to real ML projects.",
       "skills": ["Python & data libraries", "Math & statistics", "Preprocessing & EDA", "Supervised & unsupervised ML", "Model evaluation", "Deployment basics"],
       "includes": "Roadmap flowchart, algorithm guides, 4 project briefs, a 12-week sample plan, progress checklists and 17 checked learning resources",
       "fileUrl": "roadmaps/SkillPilot_Machine_Learning_Roadmap.pdf"
