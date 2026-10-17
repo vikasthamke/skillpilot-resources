@@ -49,6 +49,7 @@ It checks the entries (required fields, known category, `https://github.com/` li
   "countLabel": "50 exercises",
   "difficulty": "Beginner → Intermediate",
   "description": "One or two sentences based on what the repository actually contains.",
+  "shortDescription": "One short sentence (about 100 characters) shown on the card.",
   "skills": ["Distributions", "Hypothesis tests", "Confidence intervals"],
   "includes": "Jupyter notebook, helper module and datasets",
   "requirements": "Python 3, NumPy, SciPy and Jupyter.",
@@ -60,16 +61,19 @@ It checks the entries (required fields, known category, `https://github.com/` li
 | Field | Required | Notes |
 |---|---|---|
 | `id` | yes | Unique, usually the repo name. |
-| `title`, `description` | yes | Write them from the README and real contents. |
+| `title`, `description` | yes | Write them from the README and real contents. `description` is used for search. |
+| `shortDescription` | recommended | The text shown on the square card. Keep it to about 100 characters so the card stays square; falls back to `description`. |
 | `category` | yes | One of the `id`s in the `categories` array (`python`, `numpy`, `pandas`, `sql`, `statistics`, `machine-learning`, `deep-learning`, `genai`, `other`). Order of `categories` = order on the page. |
 | `status` | yes | Only `"published"` is shown. Use `"draft"` while preparing an entry. |
 | `verified` | yes | Must be `true` to be shown — set it after you've checked the repo and links. |
 | `repositoryUrl` | yes | Must be an `https://github.com/...` URL; the build stops with an error otherwise. |
 | `problemCount` | no | Number added to the hero total ("413 practice questions and tasks"). |
-| `countLabel`, `difficulty`, `skills`, `includes`, `requirements` | no | Leave out anything you can't verify — the card adapts. |
+| `countLabel` | no | The card shows the part before the first ` · ` ("100 questions · 615 automated tests" → "100 questions"). |
+| `difficulty`, `skills`, `includes`, `requirements` | no | Not shown on the card, but included in search. Leave out anything you can't verify. |
 | `downloadZipUrl` | no | `https://github.com/<user>/<repo>/archive/refs/heads/main.zip` (use the repo's default branch). |
 
-Icons exist for `python`, `numpy`, `pandas` and `sql`; other categories get a generic book icon until you add one to `ICONS` in `scripts/build.py`.
+Workbook cards are square and show only the title, the count, `shortDescription` and the two links. They sit four per row
+on wide screens and wrap to three, two or one column as the screen narrows.
 
 ### 1b. Add a roadmap
 

@@ -217,6 +217,18 @@ svg { flex-shrink: 0; }
 .text-link svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .text-link:hover { color: var(--text); }
 
+/* Workbook cards: square, name + count + short description + links; as many per row as fit (4 at full width) */
+.grid-wb { grid-template-columns: repeat(auto-fill, minmax(min(100%, 252px), 1fr)); align-items: start; }
+.card-wb { aspect-ratio: 1 / 1; gap: 6px; padding: 18px; }
+@media (min-width: 640px) { .card-wb { padding: 18px; } }
+.card-wb::before { inset: 0 18px auto; }
+.card-wb h4, .card-wb h5 { font-size: 1rem; line-height: 1.25; }
+.card-wb .count { margin-top: 0; font-size: 0.8125rem; color: var(--cyan); }
+.card-wb .desc { font-size: 0.8125rem; line-height: 1.45; }
+.card-wb .card-actions { flex-direction: column; align-items: stretch; gap: 0; padding-top: 6px; }
+.card-wb .card-actions .btn { width: 100%; min-height: 42px; padding: 9px 14px; font-size: 0.875rem; }
+.card-wb .text-link { justify-content: center; min-height: 36px; font-size: 0.8125rem; }
+
 .empty { color: var(--muted); padding: 24px; border: 1px dashed var(--border-strong); border-radius: var(--radius); text-align: center; }
 
 /* How-to */

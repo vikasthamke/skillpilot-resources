@@ -23,13 +23,8 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "workbooks.json"
 INDEX = ROOT / "index.html"
 
-ICONS = {
-    "python": '<path d="M8 7 3 12l5 5M16 7l5 5-5 5M13.5 5l-3 14"/>',
-    "numpy": '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>',
-    "pandas": '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9.5h18M9 9.5V20M15 9.5V20"/>',
-    "sql": '<ellipse cx="12" cy="5.5" rx="7.5" ry="2.5"/><path d="M4.5 5.5v13c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5v-13M4.5 12c0 1.4 3.4 2.5 7.5 2.5s7.5-1.1 7.5-2.5"/>',
+ICONS = {  # workbook cards have no icon since the compact redesign; roadmaps use this one
     "roadmap": '<circle cx="6" cy="18.5" r="2.5"/><circle cx="18" cy="5.5" r="2.5"/><path d="M8.5 18.5H15a3.25 3.25 0 0 0 0-6.5H9a3.25 3.25 0 0 1 0-6.5h6.5"/>',
-    "other": '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM13 4h5.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H13z"/>',
 }
 OPEN_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>'
 DOWNLOAD_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>'
@@ -121,31 +116,24 @@ def load_roadmaps(data, labels):
 
 
 def card(w, labels, heading):
+    """Compact, square workbook card: name, question count, short description and the two links.
+
+    The count is the first part of countLabel ("100 questions · 615 automated tests" -> "100 questions").
+    The full description, skills and setup notes stay in data-search, so search still finds them.
+    """
     label = labels[w["category"]]
     search = " ".join(
-        [w["title"], label, w["description"], w.get("includes", ""), w.get("requirements", ""), w.get("difficulty", "")]
+        [w["title"], label, w["description"], w.get("shortDescription", ""), w.get("includes", ""),
+         w.get("requirements", ""), w.get("difficulty", "")]
         + w.get("skills", [])
     ).lower()
-    skills = "".join(f"<li>{esc(s)}</li>" for s in w.get("skills", []))
-    facts = ""
-    if w.get("includes"):
-        facts += f"<div><dt>Includes</dt><dd>{esc(w['includes'])}</dd></div>"
-    if w.get("requirements"):
-        facts += f"<div><dt>You need</dt><dd>{esc(w['requirements'])}</dd></div>"
     zip_url = safe_url(w.get("downloadZipUrl"), GITHUB)
     title = esc(w["title"])
     return (
-        f'<li class="card" data-category="{esc(w["category"])}" data-search="{esc(search)}">'
-        f'<div class="card-top"><span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24">{ICONS.get(w["category"], ICONS["other"])}</svg></span>'
-        f'<div><div class="card-meta"><span class="badge">{esc(label)}</span>'
-        + (f'<span class="level">{esc(w["difficulty"])}</span>' if w.get("difficulty") else "")
-        + "</div>"
-        + (f'<p class="count">{esc(w["countLabel"])}</p>' if w.get("countLabel") else "")
-        + "</div></div>"
+        f'<li class="card card-wb" data-category="{esc(w["category"])}" data-search="{esc(search)}">'
         f"<{heading}>{title}</{heading}>"
-        f'<p class="desc">{esc(w["description"])}</p>'
-        + (f'<ul class="skills" aria-label="Skills practised">{skills}</ul>' if skills else "")
-        + (f'<dl class="facts">{facts}</dl>' if facts else "")
+        + (f'<p class="count">{esc(w["countLabel"].split(" · ")[0])}</p>' if w.get("countLabel") else "")
+        + f'<p class="desc">{esc(w.get("shortDescription") or w["description"])}</p>'
         + '<div class="card-actions">'
         f'<a class="btn btn-primary" href="{esc(w["repositoryUrl"])}" target="_blank" rel="noopener noreferrer">Open Workbook<span class="visually-hidden">: {title} on GitHub (opens in a new tab)</span></a>'
         + (f'<a class="text-link" href="{esc(zip_url)}">{DOWNLOAD_ICON}Download ZIP<span class="visually-hidden"> of {title}</span></a>' if zip_url else "")
@@ -194,7 +182,7 @@ def directory(data, labels, published):
     threshold = data.get("site", {}).get("showSearchFromCount", 6)
     if len(published) < threshold:  # few workbooks: one grid in category order
         items = "\n".join("            " + card(w, labels, "h4") for w in published)
-        return f'<ul class="grid">\n{items}\n          </ul>'
+        return f'<ul class="grid grid-wb">\n{items}\n          </ul>'
     sections = []
     for cat in data["categories"]:  # many workbooks: grouped under category headings
         items = [w for w in published if w["category"] == cat["id"]]
@@ -204,7 +192,7 @@ def directory(data, labels, published):
         sections.append(
             f'<section class="category" data-category-section="{esc(cat["id"])}" aria-labelledby="cat-{esc(cat["id"])}">\n'
             f'            <h4 class="category-title" id="cat-{esc(cat["id"])}">{esc(cat["label"])}</h4>\n'
-            f'            <ul class="grid">\n{cards}\n            </ul>\n          </section>'
+            f'            <ul class="grid grid-wb">\n{cards}\n            </ul>\n          </section>'
         )
     return "\n          ".join(sections)
 
