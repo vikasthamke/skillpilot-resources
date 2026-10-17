@@ -1,19 +1,20 @@
 # SkillPilot Resources
 
-The SkillPilot **Free Practice Workbooks** page — the link-in-bio page for Instagram, Reels, Stories and YouTube descriptions.
+The SkillPilot **Free Roadmaps & Practice Workbooks** page — the link-in-bio page for Instagram, Reels, Stories and YouTube descriptions.
 
 **Live page:** https://vikasthamke.github.io/skillpilot-resources/
 
 Plain HTML, CSS and JavaScript, hosted on GitHub Pages. No framework, no external scripts or fonts. One small standard-library
-Python script writes the workbook cards into `index.html`, so the page works for every visitor, crawler and link preview —
+Python script writes the roadmap and workbook cards into `index.html`, so the page works for every visitor, crawler and link preview —
 with or without JavaScript.
 
 ```
 index.html               page structure and copy; the workbook cards, hero count and links are generated into it
 assets/css/styles.css    styles (brand colours are CSS variables at the top)
-assets/js/main.js        adds search and subject filters on top of the cards (progressive enhancement)
+assets/js/main.js        adds the Roadmaps / Workbooks toggle, search and subject filters (progressive enhancement)
 assets/images/           logo mark (header + favicon), desktop hero emblem, Apple touch icon, 1200×630 social preview
-data/workbooks.json      single source of truth: site links + every workbook
+data/workbooks.json      single source of truth: site links, every roadmap and every workbook
+roadmaps/                roadmap PDFs served by this site
 scripts/build.py         writes data/workbooks.json into index.html (python3 scripts/build.py)
 WORKBOOK_AUDIT.md        audit of the GitHub account that the listing is based on
 .nojekyll                tells GitHub Pages to serve the files as they are
@@ -69,6 +70,39 @@ It checks the entries (required fields, known category, `https://github.com/` li
 | `downloadZipUrl` | no | `https://github.com/<user>/<repo>/archive/refs/heads/main.zip` (use the repo's default branch). |
 
 Icons exist for `python`, `numpy`, `pandas` and `sql`; other categories get a generic book icon until you add one to `ICONS` in `scripts/build.py`.
+
+### 1b. Add a roadmap
+
+Roadmaps are PDFs hosted on this site. They appear under the **Roadmaps** toggle.
+
+1. Copy the PDF into `roadmaps/`, for example `roadmaps/SkillPilot_Machine_Learning_Roadmap.pdf`.
+2. Add an object to the `roadmaps` array in `data/workbooks.json`:
+
+```json
+{
+  "id": "machine-learning-roadmap",
+  "title": "The Machine Learning Roadmap",
+  "category": "machine-learning",
+  "status": "published",
+  "verified": true,
+  "countLabel": "9 stages · 4 portfolio projects · 12-week plan",
+  "difficulty": "Beginner-friendly",
+  "description": "What the roadmap covers, in one or two sentences.",
+  "skills": ["Python & data libraries", "Model evaluation"],
+  "includes": "What is inside the PDF",
+  "fileUrl": "roadmaps/SkillPilot_Machine_Learning_Roadmap.pdf"
+}
+```
+
+`fileUrl` must point to a `.pdf` inside `roadmaps/` that exists; the build stops otherwise. The page count and file size on the
+card ("PDF · 24 pages · 1.4 MB") are read from the file, and the link carries a content hash (`?v=…`), so replacing the PDF
+with a new version and rebuilding is enough to update it everywhere.
+
+### Roadmaps / Workbooks toggle
+
+The toggle is added by `assets/js/main.js` (accessible tabs, arrow keys switch between them). Links ending in `#roadmaps` or
+`#workbooks` open the matching tab, so `https://vikasthamke.github.io/skillpilot-resources/#roadmaps` is a direct link to the
+roadmaps. Without JavaScript both lists are shown one after the other.
 
 ### 2. Update a description
 
