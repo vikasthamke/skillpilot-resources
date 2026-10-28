@@ -13,6 +13,10 @@ Notebook edit: five pages flip over a spiral binding, one page per part of the s
 
 Output: `the-shortlist-code-reel.mp4`. Rebuild with `./build.sh` (needs ffmpeg, Node + Playwright, Python + numpy).
 
+Cover: `the-shortlist-code-cover.jpg` (and `.png`), 1080×1920, from `cover.html`. The headline, stamped
+resume and product name sit inside the centre 1080×1440, which is what the profile grid shows.
+Rebuild with `node capture.js cover the-shortlist-code-cover.png`.
+
 ## Adding real product images and reviews
 
 The store domain could not be reached from the session that built this reel, so the template

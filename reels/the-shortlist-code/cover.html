@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Shortlist Code — Reel cover</title>
+<style>
+@font-face { font-family: "Caveat"; src: url("fonts/caveat-latin-700-normal.woff") format("woff"); font-weight: 700; }
+@font-face { font-family: "Marker"; src: url("fonts/permanent-marker-latin-400-normal.woff") format("woff"); }
+:root { --desk: #111318; --gold: #F5C451; --paper: #FBF7EE; --ink: #1B2130; --ink2: #5B6273; --pen: #D93A3A; --brand: #3B82F6; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--desk); }
+body { font-family: Inter, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; position: relative; }
+.abs { position: absolute; }
+.hand { font-family: Caveat, cursive; font-weight: 700; }
+#desk { position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 700px at 15% 8%, rgba(245,196,81,.12), transparent 60%),
+    radial-gradient(800px 900px at 95% 95%, rgba(96,165,250,.12), transparent 60%),
+    radial-gradient(1400px 1600px at 50% 50%, #171A21 0%, #0C0E12 100%); }
+#shadow { position: absolute; left: 62px; top: 170px; width: 980px; height: 1640px; border-radius: 20px; background: rgba(0,0,0,.55); filter: blur(28px); }
+.edge { position: absolute; left: 56px; top: 160px; width: 980px; height: 1640px; background: #E9E3D3; border-radius: 0 0 20px 20px; }
+#page { position: absolute; left: 50px; top: 150px; width: 980px; height: 1640px; border-radius: 6px 6px 20px 20px; overflow: hidden;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(90deg, transparent 95px, rgba(232,90,90,.55) 95px, rgba(232,90,90,.55) 98px, transparent 98px),
+    repeating-linear-gradient(180deg, transparent 0 62px, rgba(96,165,250,.30) 62px 64px);
+  background-position: 0 0, 0 108px; }
+#rings { position: absolute; left: 50px; top: 118px; width: 980px; height: 70px; }
+.ring { position: absolute; top: 0; width: 26px; height: 64px; border-radius: 13px;
+  background: linear-gradient(90deg, #6B7280, #E5E7EB 45%, #9CA3AF 70%, #4B5563); box-shadow: 0 4px 6px rgba(0,0,0,.45); }
+.hole { position: absolute; top: 44px; width: 22px; height: 22px; border-radius: 50%; background: #0E1014; box-shadow: inset 0 2px 3px rgba(0,0,0,.6); }
+
+.headline { left: 0; right: 0; top: 190px; text-align: center; font-weight: 900; font-size: 128px; line-height: .98; letter-spacing: -4px; color: var(--ink); }
+.headline .hl { background: linear-gradient(transparent 14%, var(--gold) 14%, var(--gold) 90%, transparent 90%); padding: 0 14px; border-radius: 8px; }
+.sheet { position: absolute; background: #fff; border-radius: 12px; box-shadow: 0 22px 46px rgba(17,19,24,.25), 0 2px 6px rgba(17,19,24,.12); overflow: hidden; }
+.sheet svg { width: 100%; height: 100%; display: block; }
+.stamp { position: absolute; font-family: Marker; color: var(--pen); border: 9px solid var(--pen); border-radius: 18px; padding: 6px 24px 0;
+  white-space: nowrap; line-height: 1.1; mix-blend-mode: multiply; }
+.lock { position: absolute; width: 74px; height: 74px; border-radius: 50%; background: var(--desk); display: grid; place-items: center; box-shadow: 0 6px 16px rgba(0,0,0,.35); }
+</style>
+</head>
+<body>
+<div id="desk"></div>
+<div id="shadow"></div>
+<div class="edge"></div>
+<div id="page">
+  <div class="abs headline">STOP SENDING<br>THE <span class="hl">SAME</span><br>RESUME</div>
+
+  <!-- the weak resume, stamped -->
+  <div class="sheet" id="weak" style="left:120px;top:660px;width:430px;height:580px;transform:rotate(-4deg)"></div>
+  <div class="stamp" style="left:104px;top:930px;font-size:46px;transform:rotate(-12deg)">NOT SHORTLISTED</div>
+
+  <!-- margin notes in red pen -->
+  <div class="abs hand" style="left:600px;top:660px;font-size:62px;line-height:1;color:var(--pen);transform:rotate(-3deg)">✗ no reply<br>✗ no reply<br>✗ no reply</div>
+  <div class="abs hand" style="left:600px;top:892px;font-size:76px;color:var(--ink)">callbacks:</div>
+  <div class="abs hand" style="left:858px;top:880px;font-size:96px;color:var(--pen)">0</div>
+  <svg class="abs" style="left:820px;top:870px" width="130" height="130" viewBox="0 0 120 110" overflow="visible">
+    <path d="M70 12 C 20 4, 6 50, 22 80 C 40 108, 98 104, 108 64 C 116 30, 84 10, 52 16" fill="none" stroke="#D93A3A" stroke-width="6" stroke-linecap="round"/>
+  </svg>
+
+  <!-- locked templates peeking: the tease -->
+  <div class="sheet" id="t1" style="left:600px;top:1040px;width:190px;height:250px;transform:rotate(-6deg)"></div>
+  <div class="sheet" id="t2" style="left:740px;top:1030px;width:190px;height:250px;transform:rotate(7deg)"></div>
+  <div class="lock" style="left:740px;top:1120px">
+    <svg width="34" height="38" viewBox="0 0 30 34"><rect x="3" y="14" width="24" height="18" rx="4" fill="#F5C451"/><path d="M8 14V10a7 7 0 0 1 14 0v4" stroke="#F5C451" stroke-width="4" fill="none"/><circle cx="15" cy="23" r="3" fill="#111318"/></svg>
+  </div>
+
+  <!-- product name -->
+  <div class="abs" style="left:110px;right:110px;top:1300px;height:190px;border-radius:30px;background:var(--desk);box-shadow:0 20px 44px rgba(17,19,24,.35);display:flex;align-items:center;gap:28px;padding:0 40px">
+    <img src="../../assets/images/logo-emblem-560.webp" style="width:118px;height:118px">
+    <div>
+      <div style="font-weight:900;font-size:66px;line-height:1;letter-spacing:-1.5px;color:#F9FAFB">THE <span style="color:var(--gold)">SHORTLIST</span> CODE</div>
+      <div style="margin-top:12px;font-weight:700;font-size:30px;color:#A1A1AA">by Skill<span style="color:var(--brand)">Pilot</span> · comment “RESUME”</div>
+    </div>
+  </div>
+</div>
+<div id="rings"></div>
+
+<script>
+function R(x, y, w, h, c, rx = 3) { return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${c}"/>`; }
+function lines(x, y, w, n, gap, c, seed) {
+  let s = "";
+  for (let i = 0; i < n; i++) { const k = .55 + .45 * Math.abs(Math.sin(seed * 7.3 + i * 2.1)); s += R(x, y + i * gap, w * k, 6, c, 3); }
+  return s;
+}
+const open = `<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${R(0, 0, 300, 400, "#fff", 0)}`;
+document.getElementById("weak").innerHTML = open + R(22, 20, 120, 10, "#7C8291") + R(160, 22, 110, 6, "#B9BEC8") +
+  lines(22, 46, 256, 7, 11, "#C9CDD5", 61) + lines(36, 134, 230, 6, 11, "#C9CDD5", 62) +
+  lines(22, 210, 256, 6, 11, "#C9CDD5", 63) + lines(30, 288, 240, 8, 11, "#C9CDD5", 64) + "</svg>";
+document.getElementById("t1").innerHTML = open + R(0, 0, 96, 400, "#252A34", 0) + `<circle cx="48" cy="52" r="26" fill="#F5C451"/>` +
+  lines(16, 100, 64, 6, 14, "#596172", 3) + R(114, 30, 140, 15, "#1B2130") +
+  [84, 176, 280].map((y, i) => R(114, y, 70, 9, "#252A34") + lines(114, y + 20, 165, 5, 13, "#D9DCE3", i + 5)).join("") + "</svg>";
+document.getElementById("t2").innerHTML = open + R(0, 0, 300, 92, "#F5C451", 0) + R(24, 28, 160, 17, "#1B2130") +
+  [114, 206, 300].map((y, i) => R(24, y, 74, 9, "#1B2130") + lines(24, y + 20, 250, 4, 13, "#D9DCE3", i + 9)).join("") + "</svg>";
+document.getElementById("t1").style.filter = "blur(4px)";
+document.getElementById("t2").style.filter = "blur(4px)";
+const rings = document.getElementById("rings");
+for (let i = 0; i < 17; i++) {
+  const x = 78 + i * 49;
+  rings.insertAdjacentHTML("beforeend", `<div class="hole" style="left:${x + 2}px"></div><div class="ring" style="left:${x}px"></div>`);
+}
+</script>
+</body>
+</html>
