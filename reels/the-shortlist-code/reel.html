@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The Shortlist Code — Reel</title>
+<style>
+@font-face { font-family: "Caveat"; src: url("fonts/caveat-latin-500-normal.woff") format("woff"); font-weight: 500; }
+@font-face { font-family: "Caveat"; src: url("fonts/caveat-latin-700-normal.woff") format("woff"); font-weight: 700; }
+@font-face { font-family: "Marker"; src: url("fonts/permanent-marker-latin-400-normal.woff") format("woff"); }
+
+:root {
+  --desk: #111318; --panel: #252A34; --gold: #F5C451; --blue: #60A5FA; --white: #F9FAFB;
+  --gray: #A1A1AA; --green: #34D399; --red: #F87171; --paper: #FBF7EE; --ink: #1B2130; --ink2: #5B6273;
+  --pen: #D93A3A; --brand: #3B82F6;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--desk); }
+body { font-family: Inter, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+.abs { position: absolute; }
+.hand { font-family: Caveat, cursive; font-weight: 700; }
+.wm b { color: var(--brand); }
+
+#stage { position: absolute; inset: 0; transform-origin: 540px 900px; }
+#desk { position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 700px at 15% 8%, rgba(245,196,81,.10), transparent 60%),
+    radial-gradient(800px 900px at 95% 95%, rgba(96,165,250,.10), transparent 60%),
+    radial-gradient(1400px 1600px at 50% 50%, #171A21 0%, #0C0E12 100%); }
+#nb { position: absolute; left: 50px; top: 150px; width: 980px; height: 1500px; perspective: 3800px; }
+#nbShadow { position: absolute; left: 62px; top: 170px; width: 980px; height: 1500px; border-radius: 20px;
+  background: rgba(0,0,0,.55); filter: blur(28px); }
+.stackEdge { position: absolute; left: 6px; right: -6px; top: 10px; bottom: -10px; background: #E9E3D3; border-radius: 0 0 20px 20px; }
+.stackEdge.e2 { left: 12px; right: -12px; top: 18px; bottom: -18px; background: #DCD5C2; }
+.page { position: absolute; inset: 0; border-radius: 6px 6px 20px 20px; overflow: hidden;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(90deg, transparent 95px, rgba(232,90,90,.55) 95px, rgba(232,90,90,.55) 98px, transparent 98px),
+    repeating-linear-gradient(180deg, transparent 0 62px, rgba(96,165,250,.30) 62px 64px);
+  background-position: 0 0, 0 108px;
+  transform-origin: 50% 0; backface-visibility: hidden; }
+.page .shade { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.35)); }
+.page .under { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.28), rgba(0,0,0,0) 70%); }
+.phead { position: absolute; left: 120px; right: 50px; top: 52px; height: 48px; display: flex; align-items: center; justify-content: space-between; }
+.phead .wm { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 28px; letter-spacing: -.3px; }
+.phead .wm img { width: 40px; height: 40px; }
+.phead .pn { font-family: Caveat; font-weight: 500; font-size: 38px; color: var(--ink2); }
+
+#rings { position: absolute; left: 50px; top: 118px; width: 980px; height: 70px; pointer-events: none; }
+.ring { position: absolute; top: 0; width: 26px; height: 64px; border-radius: 13px;
+  background: linear-gradient(90deg, #6B7280, #E5E7EB 45%, #9CA3AF 70%, #4B5563); box-shadow: 0 4px 6px rgba(0,0,0,.45); }
+.hole { position: absolute; top: 44px; width: 22px; height: 22px; border-radius: 50%; background: #0E1014; box-shadow: inset 0 2px 3px rgba(0,0,0,.6); }
+
+/* resume sheets */
+.sheet { position: absolute; background: #fff; border-radius: 10px; box-shadow: 0 18px 40px rgba(17,19,24,.22), 0 2px 6px rgba(17,19,24,.12); overflow: hidden; }
+.sheet svg { width: 100%; height: 100%; display: block; }
+
+.chip { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px; border-radius: 999px; font-weight: 800; font-size: 22px; letter-spacing: 1.5px; }
+.card { position: absolute; background: #fff; border-radius: 22px; box-shadow: 0 18px 40px rgba(17,19,24,.16), 0 2px 6px rgba(17,19,24,.10); }
+.hl { background-image: linear-gradient(transparent 12%, rgba(245,196,81,.85) 12%, rgba(245,196,81,.85) 92%, transparent 92%);
+  background-repeat: no-repeat; background-size: 0% 100%; padding: 0 4px; border-radius: 4px; }
+.hlg { background-image: linear-gradient(transparent 12%, rgba(52,211,153,.55) 12%, rgba(52,211,153,.55) 92%, transparent 92%); }
+.stamp { position: absolute; font-family: Marker; color: var(--pen); border: 9px solid var(--pen); border-radius: 18px; padding: 6px 26px 0;
+  mix-blend-mode: multiply; white-space: nowrap; line-height: 1.1; }
+.lock { position: absolute; width: 64px; height: 64px; border-radius: 50%; background: var(--desk); display: grid; place-items: center; box-shadow: 0 6px 16px rgba(0,0,0,.35); }
+
+/* captions */
+#cap { position: absolute; left: 0; right: 0; top: 1332px; display: flex; justify-content: center; pointer-events: none; }
+#capBox { max-width: 960px; padding: 18px 32px 20px; border-radius: 24px; background: rgba(17,19,24,.94);
+  box-shadow: 0 14px 34px rgba(0,0,0,.35); text-align: center; font-weight: 800; font-size: 54px; line-height: 1.12; letter-spacing: -.6px; color: var(--white); }
+#capBox span { display: inline-block; margin: 0 11px; transition: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="desk"></div>
+  <div id="nbShadow"></div>
+  <div id="nb">
+    <div class="stackEdge e2"></div>
+    <div class="stackEdge"></div>
+  </div>
+  <div id="rings"></div>
+  <div id="cap"><div id="capBox"></div></div>
+</div>
+
+<script>
+// ---------- data (overridden by capture.js through boot()) ----------
+let WORDS = [];
+let REVIEWS = [];
+let PREVIEWS = [];
+const LOGO = "../../assets/images/logo-emblem-560.webp";
+const T_END = 29.0;
+
+// ---------- helpers ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const p = (t, a, b) => clamp((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c1 = 1.9, c3 = c1 + 1; return x <= 0 ? 0 : 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const lerp = (a, b, x) => a + (b - a) * x;
+function E(tag, cls, parent, css, html) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (css) e.style.cssText = css;
+  if (html != null) e.innerHTML = html;
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function tf(e, o) {
+  const x = o.x || 0, y = o.y || 0, s = o.s == null ? 1 : o.s, r = o.r || 0;
+  e.style.transform = `translate(${x}px,${y}px) rotate(${r}deg) scale(${s})`;
+  if (o.o != null) e.style.opacity = o.o;
+  if (o.blur != null) e.style.filter = o.blur > 0.05 ? `blur(${o.blur}px)` : "none";
+}
+// pop-in: scale with overshoot + fade
+function pop(e, t, t0, d = .38, extra = {}) {
+  const q = p(t, t0, t0 + d);
+  tf(e, Object.assign({ s: q <= 0 ? .6 : lerp(.6, 1, back(q)), o: eo(clamp(q * 2)) }, extra));
+}
+// slide-in from offset
+function slide(e, t, t0, dx, dy, d = .45, extra = {}) {
+  const q = eo(p(t, t0, t0 + d));
+  tf(e, Object.assign({ x: (1 - q) * dx, y: (1 - q) * dy, o: q }, extra));
+}
+// left-to-right write-on
+function write(e, t, t0, t1) {
+  const q = p(t, t0, t1);
+  e.style.clipPath = q >= 1 ? "none" : `inset(-20px ${(1 - q) * 100}% -20px -20px)`;
+  e.style.opacity = q > 0 ? 1 : 0;
+}
+function draw(path, t, t0, t1) {
+  const q = eio(p(t, t0, t1));
+  path.style.strokeDashoffset = 1 - q;
+  path.style.opacity = q > 0 ? 1 : 0;
+}
+function hilite(e, t, t0, d = .3) { e.style.backgroundSize = `${eo(p(t, t0, t0 + d)) * 100}% 100%`; }
+
+const LOCK_SVG = `<svg width="30" height="34" viewBox="0 0 30 34"><rect x="3" y="14" width="24" height="18" rx="4" fill="#F5C451"/><path d="M8 14V10a7 7 0 0 1 14 0v4" stroke="#F5C451" stroke-width="4" fill="none"/><circle cx="15" cy="23" r="3" fill="#111318"/></svg>`;
+const CHECK = c => `<svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="16" fill="${c}"/><path d="M9 17.5l5.5 5.5L25 12" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const CURSOR = `<svg width="54" height="64" viewBox="0 0 27 32"><path d="M2 2l20 13-9 2 5 10-4 2-5-10-7 6z" fill="#111318" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>`;
+
+// ---------- resume wireframes (viewBox 300x400) ----------
+function R(x, y, w, h, c, rx = 3) { return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${c}"/>`; }
+function lines(x, y, w, n, gap = 13, c = "#D9DCE3", seed = 1) {
+  let s = "";
+  for (let i = 0; i < n; i++) { const k = .55 + .45 * Math.abs(Math.sin(seed * 7.3 + i * 2.1)); s += R(x, y + i * gap, w * k, 6, c, 3); }
+  return s;
+}
+function resumeSVG(kind) {
+  let s = `<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${R(0, 0, 300, 400, "#fff", 0)}`;
+  if (kind === 0) { // classic single column
+    s += R(24, 26, 150, 16, "#1B2130") + R(24, 50, 210, 6, "#9AA1AF") + R(24, 70, 252, 2, "#1B2130", 1);
+    [88, 170, 262].forEach((y, i) => { s += R(24, y, 80, 9, "#2E5BBA") + lines(24, y + 20, 250, i === 1 ? 5 : 4, 13, "#D9DCE3", i + 1); });
+  } else if (kind === 1) { // dark left sidebar
+    s += R(0, 0, 96, 400, "#252A34", 0) + `<circle cx="48" cy="52" r="26" fill="#F5C451"/>` + lines(16, 100, 64, 6, 14, "#596172", 3) + lines(16, 210, 64, 7, 14, "#596172", 4);
+    s += R(114, 30, 140, 15, "#1B2130") + R(114, 52, 100, 6, "#9AA1AF");
+    [84, 176, 280].forEach((y, i) => { s += R(114, y, 70, 9, "#252A34") + lines(114, y + 20, 165, 5, 13, "#D9DCE3", i + 5); });
+  } else if (kind === 2) { // gold header band
+    s += R(0, 0, 300, 92, "#F5C451", 0) + R(24, 28, 160, 17, "#1B2130") + R(24, 54, 120, 7, "#6B5A22");
+    [114, 206, 300].forEach((y, i) => { s += R(24, y, 74, 9, "#1B2130") + lines(24, y + 20, 250, 4, 13, "#D9DCE3", i + 9); });
+  } else if (kind === 3) { // two equal columns
+    s += R(24, 26, 170, 16, "#1B2130") + R(24, 50, 130, 6, "#9AA1AF") + R(24, 68, 252, 2, "#60A5FA", 1);
+    [86, 190, 290].forEach((y, i) => { s += R(24, y, 60, 9, "#60A5FA") + lines(24, y + 20, 115, 5, 13, "#D9DCE3", i + 12) + R(160, y, 60, 9, "#60A5FA") + lines(160, y + 20, 115, 5, 13, "#D9DCE3", i + 20); });
+  } else if (kind === 4) { // minimal centered
+    s += R(80, 30, 140, 16, "#1B2130") + R(95, 54, 110, 6, "#9AA1AF");
+    [84, 176, 268].forEach((y, i) => { s += R(24, y, 252, 1.5, "#1B2130", 1) + R(118, y + 10, 64, 8, "#1B2130") + lines(24, y + 28, 250, 4, 13, "#D9DCE3", i + 30); });
+  } else if (kind === 5) { // right sidebar blue
+    s += R(204, 0, 96, 400, "#E8F1FE", 0) + R(24, 30, 150, 16, "#1B2130") + R(24, 54, 110, 6, "#9AA1AF");
+    [90, 190, 290].forEach((y, i) => { s += R(24, y, 70, 9, "#1B2130") + lines(24, y + 20, 160, 5, 13, "#D9DCE3", i + 40); });
+    s += R(218, 34, 60, 8, "#2E5BBA") + lines(218, 54, 64, 6, 14, "#A9C6F5", 50) + R(218, 160, 60, 8, "#2E5BBA") + lines(218, 180, 64, 8, 14, "#A9C6F5", 51);
+  } else if (kind === "weak") { // cluttered, no hierarchy
+    s += R(22, 20, 120, 10, "#7C8291") + R(160, 22, 110, 6, "#B9BEC8");
+    s += lines(22, 46, 256, 7, 11, "#C9CDD5", 61) + lines(36, 134, 230, 6, 11, "#C9CDD5", 62);
+    s += lines(22, 210, 256, 6, 11, "#C9CDD5", 63) + lines(30, 288, 240, 8, 11, "#C9CDD5", 64);
+  } else if (kind === "sample") {
+    s += R(24, 26, 160, 16, "#1B2130") + R(24, 50, 200, 6, "#9AA1AF") + R(24, 70, 252, 2, "#1B2130", 1);
+    s += R(24, 86, 80, 9, "#1E9E6E") + lines(24, 104, 250, 3, 13, "#D9DCE3", 71);
+    s += R(24, 156, 90, 9, "#1E9E6E");
+    [176, 208, 240].forEach((y, i) => { s += `<circle cx="30" cy="${y + 3}" r="3.5" fill="#1B2130"/>` + R(42, y, 200 + (i % 2) * 30, 6, "#BFC4CE") + R(42, y + 12, 140 + i * 20, 6, "#D9DCE3"); });
+    s += R(24, 284, 70, 9, "#1E9E6E") + lines(24, 302, 250, 6, 13, "#D9DCE3", 72);
+  }
+  return s + "</svg>";
+}
+
+// ---------- build ----------
+const nb = document.getElementById("nb");
+const ringsEl = document.getElementById("rings");
+for (let i = 0; i < 17; i++) {
+  const x = 78 + i * 49;
+  E("div", "hole", ringsEl, `left:${x + 2}px`);
+  E("div", "ring", ringsEl, `left:${x}px`);
+}
+const PAGES = [];
+function makePage(n) {
+  const pg = E("div", "page", nb);
+  E("div", "under", pg);
+  const head = E("div", "phead", pg);
+  E("div", "wm", head, "", `<img src="${LOGO}"><span>Skill<b>Pilot</b></span>`);
+  E("div", "pn", head, "", `p.0${n}`);
+  const content = E("div", "abs", pg, "inset:0");
+  E("div", "shade", pg);
+  pg.style.zIndex = 20 - n;
+  PAGES.push(pg);
+  return content;
+}
+const els = {};
+function build() {
+  // ===== PAGE 1: hook =====
+  const p1 = makePage(1);
+  els.p1title = E("div", "abs hand", p1, "left:120px;top:122px;font-size:62px;color:var(--ink)", "Job hunt log");
+  els.res1 = E("div", "sheet", p1, "left:355px;top:210px;width:270px;height:360px", resumeSVG("weak"));
+  els.res1lab = E("div", "abs", p1, "left:0;right:0;top:588px;text-align:center;font-size:26px;font-weight:600;color:var(--ink2)", "resume_final_v7.pdf");
+  els.stop = E("div", "stamp", p1, "left:298px;top:300px;font-size:150px;transform-origin:center", "STOP");
+  els.rowHead = E("div", "abs hand", p1, "left:140px;top:640px;width:760px;display:flex;justify-content:space-between;font-size:44px;color:var(--ink2);border-bottom:3px solid rgba(27,33,48,.6);padding-bottom:4px", "<span>applied to</span><span>sent</span><span>reply?</span>");
+  els.rows = []; els.flyers = [];
+  for (let i = 0; i < 5; i++) {
+    const y = 714 + i * 70;
+    const row = E("div", "abs", p1, `left:140px;top:${y}px;width:760px;height:64px`);
+    const job = E("div", "abs", row, "left:0;top:10px;font-size:34px;font-weight:700;color:var(--ink)", `Job 0${i + 1}`);
+    const doc = E("div", "sheet", row, "left:346px;top:0;width:46px;height:62px;border-radius:5px;box-shadow:0 3px 8px rgba(0,0,0,.18)", resumeSVG("weak"));
+    const st = E("div", "abs hand", row, "right:0;top:-2px;font-size:50px;color:var(--pen)", "no reply ✗");
+    els.rows.push({ row, job, doc, st });
+  }
+  els.cb = E("div", "abs hand", p1, "left:140px;top:1066px;font-size:66px;color:var(--ink)", "callbacks: <span id='zero' style='position:relative;color:var(--pen)'>0</span>");
+  els.cbCircle = E("div", "abs", document.getElementById("zero") || els.cb.querySelector("#zero"), "left:-44px;top:-8px;width:120px;height:110px", `<svg viewBox="0 0 120 110" width="120" height="110" overflow="visible"><path pathLength="1" d="M70 12 C 20 4, 6 50, 22 80 C 40 108, 98 104, 108 64 C 116 30, 84 10, 52 16" fill="none" stroke="#D93A3A" stroke-width="6" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/></svg>`);
+
+  // ===== PAGE 2: pain points =====
+  const p2 = makePage(2);
+  els.p2title = E("div", "abs hand", p2, "left:120px;top:122px;font-size:62px;color:var(--ink)", "Why it gets skipped:");
+  els.res2 = E("div", "sheet", p2, "left:120px;top:226px;width:520px;height:700px", resumeSVG("weak"));
+  els.res2ov = E("div", "abs", p2, "left:120px;top:226px;width:520px;height:700px",
+    `<svg viewBox="0 0 520 700" width="520" height="700" overflow="visible">
+      <path id="c1" pathLength="1" d="M40 20 C 200 -10, 470 0, 500 60 C 520 140, 300 190, 60 170 C -10 160, -12 40, 70 22" fill="none" stroke="#D93A3A" stroke-width="7" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>
+      <path id="c2" pathLength="1" d="M60 230 C 260 205, 490 220, 492 300 C 494 380, 250 382, 50 360 C -6 350, 6 238, 90 228" fill="none" stroke="#D93A3A" stroke-width="7" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>
+      <path id="c3" pathLength="1" d="M70 500 C 260 470, 500 490, 495 580 C 490 660, 250 670, 50 640 C -4 630, 8 510, 100 498" fill="none" stroke="#D93A3A" stroke-width="7" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="1"/>
+    </svg>`);
+  els.notes = [
+    E("div", "abs hand", p2, "left:672px;top:250px;font-size:52px;line-height:1;color:var(--pen)", "✗ no clear<br>structure"),
+    E("div", "abs hand", p2, "left:672px;top:478px;font-size:52px;line-height:1;color:var(--pen)", "✗ skills don't<br>match the job"),
+    E("div", "abs hand", p2, "left:672px;top:722px;font-size:52px;line-height:1;color:var(--pen)", "✗ no real<br>achievements"),
+  ];
+  els.scan = E("div", "abs", p2, "left:104px;top:226px;width:552px;height:10px;border-radius:6px;background:var(--gold);box-shadow:0 0 30px 8px rgba(245,196,81,.55)");
+  els.scanChip = E("div", "abs chip", p2, "left:420px;top:180px;background:var(--desk);color:var(--gold);font-size:22px", "RECRUITER SCAN");
+  els.notSL = E("div", "stamp", p2, "left:104px;top:600px;font-size:52px;transform-origin:center;z-index:3", "NOT SHORTLISTED");
+  els.p2foot = E("div", "abs hand", p2, "left:120px;top:990px;font-size:58px;color:var(--ink)", "…and nobody tells you <span style='color:var(--pen)'>why.</span>");
+
+  // ===== PAGE 3: solution =====
+  const p3 = makePage(3);
+  els.p3title = E("div", "abs hand", p3, "left:0;right:0;top:118px;text-align:center;font-size:66px;color:var(--ink)", "So I built this ↓");
+  els.cover = E("div", "abs", p3, "left:250px;top:226px;width:480px;height:620px;border-radius:20px;overflow:hidden;background:#111318;box-shadow:0 30px 60px rgba(17,19,24,.45);transform-origin:center",
+    `<div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg, rgba(245,196,81,.06) 0 2px, transparent 2px 22px)"></div>
+     <div style="position:absolute;left:36px;top:34px;display:flex;align-items:center;gap:10px;color:#F9FAFB;font-weight:800;font-size:24px"><img src="${LOGO}" style="width:38px;height:38px">Skill<span style="color:#3B82F6">Pilot</span></div>
+     <div style="position:absolute;left:36px;right:30px;top:130px;color:#F9FAFB;font-weight:900;font-size:74px;line-height:.98;letter-spacing:-2px">THE<br><span style="color:#F5C451">SHORTLIST</span><br>CODE</div>
+     <div style="position:absolute;left:36px;top:388px;width:90px;height:6px;border-radius:3px;background:#F5C451"></div>
+     <div style="position:absolute;left:36px;right:36px;top:414px;color:#A1A1AA;font-weight:600;font-size:25px;line-height:1.35">Resume templates · Sample resumes · Role guides · Tailoring guide</div>
+     <div style="position:absolute;left:36px;bottom:-60px;width:120px;height:160px;transform:rotate(-8deg);border-radius:8px;overflow:hidden;opacity:.9">${resumeSVG(1)}</div>
+     <div style="position:absolute;left:150px;bottom:-70px;width:120px;height:160px;transform:rotate(2deg);border-radius:8px;overflow:hidden;opacity:.9">${resumeSVG(2)}</div>
+     <div style="position:absolute;left:266px;bottom:-62px;width:120px;height:160px;transform:rotate(9deg);border-radius:8px;overflow:hidden;opacity:.9">${resumeSVG(0)}</div>`);
+  els.sticker = E("div", "abs", p3, "left:640px;top:188px;width:170px;height:170px;border-radius:50%;background:#fff;box-shadow:0 10px 26px rgba(0,0,0,.28);display:grid;place-items:center;transform-origin:center",
+    `<img src="${LOGO}" style="width:132px;height:132px">`);
+  els.byline = E("div", "abs hand", p3, "left:0;right:0;top:878px;text-align:center;font-size:62px;color:var(--ink)", "by Skill<span style='color:var(--brand)'>Pilot</span>");
+  // inside: x6 templates
+  els.x6 = E("div", "abs hand", p3, "left:330px;top:150px;font-size:150px;line-height:1;color:var(--ink)", "×6");
+  els.x6lab = E("div", "abs hand", p3, "left:500px;top:172px;font-size:56px;line-height:1;color:var(--ink)", "editable<br>resume templates");
+  els.thumbs = [];
+  for (let i = 0; i < 6; i++) {
+    const c = i % 3, r = Math.floor(i / 3);
+    const th = E("div", "sheet", p3, `left:${130 + c * 268}px;top:${380 + r * 372}px;width:240px;height:320px;transform-origin:center`);
+    const inner = E("div", "abs", th, "inset:0");
+    if (PREVIEWS[i]) inner.innerHTML = `<img src="${PREVIEWS[i]}" style="width:100%;height:100%;object-fit:cover;object-position:top">`;
+    else inner.innerHTML = resumeSVG(i);
+    els.thumbs.push({ th, inner });
+  }
+  els.locks = [3, 4, 5].map(i => {
+    const th = els.thumbs[i].th;
+    const lk = E("div", "lock", th, "left:88px;top:110px", LOCK_SVG);
+    return lk;
+  });
+  els.lockNote = E("div", "abs hand", p3, "left:130px;top:1102px;font-size:50px;color:var(--ink2)", "3 more locked inside…");
+  els.edit = E("div", "abs", els.thumbs[0].th, "left:14px;top:14px;width:150px;height:30px;border:3px solid var(--blue);border-radius:6px;background:#fff;font-weight:800;font-size:17px;padding:2px 6px;color:var(--ink);white-space:nowrap;overflow:hidden", "");
+  els.cursor1 = E("div", "abs", p3, "left:0;top:0;width:54px;height:64px", CURSOR);
+  // samples + role guides
+  els.sTitle = E("div", "abs hand", p3, "left:120px;top:262px;font-size:58px;color:var(--ink)", "Sample resumes");
+  els.sample = E("div", "sheet", p3, "left:120px;top:356px;width:400px;height:540px", resumeSVG("sample"));
+  els.sTab = E("div", "abs chip", p3, "left:150px;top:330px;background:#1E9E6E;color:#fff;font-size:20px", "SAMPLE");
+  els.sChecks = [0, 1, 2].map(i => E("div", "abs", p3, `left:470px;top:${582 + i * 43}px`, CHECK("#1E9E6E")));
+  els.gTitle = E("div", "abs hand", p3, "left:556px;top:262px;font-size:58px;line-height:.95;color:var(--ink)", "Role-specific<br>guides");
+  els.guides = ["#F5C451", "#60A5FA", "#34D399"].map((c, i) => {
+    const g = E("div", "card", p3, `left:556px;top:${410 + i * 166}px;width:350px;height:146px;overflow:hidden`,
+      `<div style="position:absolute;left:0;top:0;bottom:0;width:18px;background:${c}"></div>
+       <div style="position:absolute;left:40px;top:22px;font-weight:800;font-size:28px;color:var(--ink)">Role guide 0${i + 1}</div>
+       <div style="position:absolute;left:40px;top:70px;width:${170 - i * 20}px;height:16px;border-radius:8px;background:#C9CDD5;filter:blur(3px)"></div>
+       <div style="position:absolute;left:40px;top:100px;width:${210 - i * 30}px;height:12px;border-radius:6px;background:#E1E4EA;filter:blur(3px)"></div>
+       <div class="lock" style="left:262px;top:40px;width:60px;height:60px">${LOCK_SVG}</div>`);
+    return g;
+  });
+  els.more = E("div", "abs hand", p3, "left:556px;top:920px;font-size:52px;color:var(--ink2)", "+ more inside");
+
+  // ===== PAGE 4: tailoring =====
+  const p4 = makePage(4);
+  els.p4title = E("div", "abs hand", p4, "left:120px;top:122px;font-size:62px;color:var(--ink)", "Tailor it to every job post");
+  els.jdBack = [2, 1].map(k => E("div", "card", p4, `left:${110 + k * 16}px;top:${232 - k * 16}px;width:800px;height:330px;background:#F3F4F6`));
+  els.jdBack.forEach((e, i) => E("div", "abs", e, "right:24px;top:16px;font-weight:800;font-size:20px;color:var(--ink2);letter-spacing:1.5px", `JD #${3 - i}`));
+  els.jd = E("div", "card", p4, "left:110px;top:232px;width:800px;height:330px;padding:28px 34px",
+    `<div class="chip" style="background:#EEF2F7;color:var(--ink2)">JOB DESCRIPTION</div>
+     <div style="margin-top:22px;font-size:36px;line-height:1.45;font-weight:500;color:var(--ink)">We need someone who can write <span class="hl" id="k1">SQL</span>, build <span class="hl" id="k2">dashboards</span> and work with <span class="hl" id="k3">stakeholders</span>.</div>`);
+  els.arrows = E("div", "abs", p4, "left:110px;top:560px;width:800px;height:130px",
+    `<svg viewBox="0 0 800 130" width="800" height="130" overflow="visible">
+      ${[[300, 200], [480, 400], [650, 600]].map(([a, b], i) => `<path class="arr" pathLength="1" d="M${a} 6 C ${a - 20} 60, ${b + 20} 70, ${b} 118 M${b - 14} 100 L${b} 120 L${b + 16} 104" fill="none" stroke="#1B2130" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="1"/>`).join("")}
+    </svg>`);
+  els.res4 = E("div", "card", p4, "left:110px;top:700px;width:800px;height:390px;padding:28px 34px",
+    `<div class="chip" style="background:#EEF2F7;color:var(--ink2)">YOUR RESUME</div>`);
+  const before = ["Worked on data tasks", "Made weekly reports", "Helped the team"];
+  const after = ['Wrote <span class="hl hlg">SQL</span> to clean sales data', 'Built <span class="hl hlg">dashboards</span> for weekly reporting', 'Presented results to <span class="hl hlg">stakeholders</span>'];
+  els.bul = before.map((b, i) => {
+    const row = E("div", "abs", els.res4, `left:34px;top:${104 + i * 84}px;width:740px;height:70px;font-size:34px;font-weight:600;color:var(--ink)`);
+    const old = E("div", "abs", row, "left:0;top:0;white-space:nowrap", "• " + b);
+    const strike = E("div", "abs", row, "left:22px;top:22px;height:5px;border-radius:3px;background:var(--pen);width:0");
+    const nw = E("div", "abs", row, "left:0;top:0;white-space:nowrap", "• " + after[i]);
+    return { old, strike, nw, w: [370, 360, 270][i] };
+  });
+  els.match = E("div", "abs chip", p4, "left:560px;top:690px;background:#1E9E6E;color:#fff;font-size:24px;letter-spacing:.5px;padding:10px 18px;transform-origin:center",
+    `${CHECK("#0F6E4A")} 3/3 keywords matched`);
+  els.p4foot = E("div", "abs hand", p4, "left:120px;top:1100px;font-size:52px;color:var(--ink2)", "new job post → new version");
+
+  // ===== PAGE 5: CTA =====
+  const p5 = makePage(5);
+  els.p5title = E("div", "abs hand", p5, "left:120px;top:122px;font-size:62px;color:var(--ink)", "Before you hit send…");
+  els.form = E("div", "card", p5, "left:150px;top:260px;width:680px;height:520px;padding:34px 40px",
+    `<div style="font-weight:800;font-size:34px;color:var(--ink)">Apply for this role</div>
+     ${["Full name", "Email"].map((f, i) => `<div style="margin-top:${i ? 18 : 26}px;font-size:22px;font-weight:700;color:var(--ink2)">${f}</div><div style="margin-top:8px;height:52px;border-radius:12px;background:#F1F3F6"></div>`).join("")}
+     <div style="margin-top:18px;font-size:22px;font-weight:700;color:var(--ink2)">Resume</div>
+     <div style="margin-top:8px;height:52px;border-radius:12px;background:#F1F3F6;display:flex;align-items:center;padding:0 16px;font-size:24px;font-weight:600;color:var(--ink2)">📎 resume_final_v7.pdf</div>
+     <div id="sendBtn" style="position:absolute;left:40px;right:40px;bottom:30px;height:78px;border-radius:16px;background:#2563EB;color:#fff;font-weight:800;font-size:32px;display:grid;place-items:center">Send application ➤</div>`);
+  els.cursor2 = E("div", "abs", p5, "left:0;top:0;width:54px;height:64px;z-index:5", CURSOR);
+  els.note = E("div", "abs", p5, "left:470px;top:560px;width:380px;height:250px;background:var(--gold);box-shadow:0 14px 30px rgba(0,0,0,.25);transform-origin:center;padding:34px 30px;z-index:6",
+    `<div class="hand" style="font-size:62px;line-height:.95;color:var(--ink)">Wait!<br>Check this<br>first ↓</div>`);
+  // optional reviews (only rendered when data/reviews.json has entries)
+  els.reviews = REVIEWS.slice(0, 2).map((rv, i) => E("div", "card", p5, `left:${130 + i * 40}px;top:${300 + i * 250}px;width:720px;padding:28px 34px;z-index:4`,
+    `<div style="color:#F5A524;font-size:34px;letter-spacing:4px">${"★".repeat(Math.round(rv.rating || 5))}</div>
+     <div style="margin-top:10px;font-size:32px;line-height:1.3;font-weight:600;color:var(--ink)">“${rv.text}”</div>
+     <div style="margin-top:12px;font-size:24px;font-weight:700;color:var(--ink2)">— ${rv.name}${rv.verified ? " · Verified buyer" : ""}</div>`));
+  // comment panel
+  els.panel = E("div", "abs", p5, "left:110px;top:250px;width:780px;height:800px;border-radius:30px;background:#1A1D24;box-shadow:0 30px 60px rgba(17,19,24,.45);overflow:hidden",
+    `<div style="position:absolute;left:0;right:0;top:16px;display:flex;justify-content:center"><div style="width:70px;height:7px;border-radius:4px;background:#3A404D"></div></div>
+     <div style="position:absolute;left:0;right:0;top:42px;text-align:center;font-weight:800;font-size:30px;color:#F9FAFB">Comments</div>
+     <div style="position:absolute;left:0;right:0;top:100px;height:1px;background:#2C313C"></div>`);
+  els.ghost = E("div", "abs", els.panel, "left:0;right:0;top:300px;text-align:center;color:#6B7280",
+    `<div style="font-size:90px;line-height:1">💬</div><div style="margin-top:18px;font-size:34px;font-weight:700">No comments yet</div><div style="margin-top:8px;font-size:28px;font-weight:600">Be the first to type it</div>`);
+  els.posted = E("div", "abs", els.panel, "left:40px;top:136px;right:40px;display:flex;gap:20px;align-items:flex-start",
+    `<div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#60A5FA,#8B5CF6);flex:none;display:grid;place-items:center;font-weight:800;font-size:28px;color:#fff">You</div>
+     <div><div style="font-size:24px;font-weight:700;color:#A1A1AA">you · now</div><div style="font-size:52px;font-weight:900;color:#F5C451;letter-spacing:2px">RESUME</div></div>
+     <div style="margin-left:auto;font-size:40px;color:#F87171" id="heart">♥</div>`);
+  els.dm = E("div", "abs", els.panel, "left:40px;right:40px;top:300px;height:330px;border-radius:24px;background:#252A34;padding:24px",
+    `<div style="display:flex;align-items:center;gap:16px"><div style="width:64px;height:64px;border-radius:50%;background:#fff;display:grid;place-items:center"><img src="${LOGO}" style="width:52px;height:52px"></div>
+       <div><div style="font-size:28px;font-weight:800;color:#F9FAFB">SkillPilot</div><div style="font-size:22px;font-weight:600;color:#A1A1AA">sent you a message</div></div></div>
+     <div style="margin-top:20px;border-radius:18px;background:#111318;display:flex;gap:18px;padding:16px;align-items:center">
+       <div style="width:96px;height:124px;border-radius:10px;background:#1B1F27;overflow:hidden;flex:none;position:relative;border:2px solid #F5C451">
+         <div style="position:absolute;left:8px;top:14px;color:#fff;font-weight:900;font-size:15px;line-height:1">THE<br><span style="color:#F5C451">SHORTLIST</span><br>CODE</div></div>
+       <div><div style="font-size:30px;font-weight:800;color:#F9FAFB">The Shortlist Code</div>
+         <div style="margin-top:6px;font-size:23px;font-weight:600;color:#60A5FA">🔗 here's your link</div></div></div>`);
+  els.composer = E("div", "abs", els.panel, "left:28px;right:28px;bottom:30px;height:96px;border-radius:48px;background:#2A2F3A;display:flex;align-items:center;padding:0 14px 0 30px;gap:18px",
+    `<div id="typed" style="flex:1;font-size:40px;font-weight:800;letter-spacing:2px;color:#F5C451"></div>
+     <div id="sendDot" style="width:70px;height:70px;border-radius:50%;background:#3B82F6;display:grid;place-items:center;font-size:32px;color:#fff">➤</div>`);
+  // end card
+  els.endFan = [0, 1, 2].map(i => {
+    const e = E("div", "sheet", p5, `left:${320 + (i - 1) * 150}px;top:260px;width:340px;height:460px;transform-origin:50% 120%`);
+    const inner = E("div", "abs", e, "inset:0");
+    const k = [1, 2, 5][i];
+    inner.innerHTML = PREVIEWS[k] ? `<img src="${PREVIEWS[k]}" style="width:100%;height:100%;object-fit:cover;object-position:top">` : resumeSVG(k);
+    inner.style.filter = "blur(5px)";
+    E("div", "lock", e, "left:138px;top:198px", LOCK_SVG);
+    return e;
+  });
+  els.endCmt = E("div", "abs hand", p5, "left:0;right:0;top:770px;text-align:center;font-size:96px;line-height:1;color:var(--ink)", "Comment");
+  els.endWord = E("div", "abs", p5, "left:220px;width:540px;top:870px;height:150px;border-radius:28px;background:var(--desk);display:grid;place-items:center;font-weight:900;font-size:110px;letter-spacing:6px;color:var(--gold);box-shadow:0 18px 40px rgba(17,19,24,.35);transform-origin:center", "RESUME");
+  els.endSub = E("div", "abs", p5, "left:0;right:0;top:1052px;text-align:center;font-size:38px;font-weight:700;color:var(--ink2)", "I'll DM you the link");
+  els.endArrow = E("div", "abs", p5, "left:790px;top:900px;width:170px;height:260px",
+    `<svg viewBox="0 0 170 260" width="170" height="260" overflow="visible"><path class="arr" pathLength="1" d="M10 20 C 120 20, 150 120, 120 230 M96 206 L120 236 L146 210" fill="none" stroke="#1B2130" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1" stroke-dashoffset="1"/></svg>`);
+
+  // ===== captions =====
+  buildCaptions();
+}
+
+// ---------- captions ----------
+const CHUNKS = [
+  "Stop sending the same", "weak resume to every job", "and wondering why", "you're not getting callbacks!",
+  "Your resume might be missing", "the right structure,", "relevant skills,", "or achievements", "that make recruiters", "notice your profile.",
+  "That's why I created", "The Shortlist Code", "by SkillPilot.|2", "Get six editable", "resume templates,", "sample resumes,", "role-specific|2 guides,",
+  "and a practical guide", "to tailoring your resume", "for each job description.",
+  "Check this out before", "you send your next application.", "Comment RESUME below", "and I'll send you the link!",
+];
+const EMPH = { "weak": "#F87171", "callbacks!": "#F87171", "structure,": "#F87171", "skills,": "#F87171", "achievements": "#F87171",
+  "recruiters": "#60A5FA", "Shortlist": "#F5C451", "Code": "#F5C451", "SkillPilot.": "#60A5FA", "six": "#F5C451",
+  "tailoring": "#F5C451", "RESUME": "#F5C451", "link!": "#60A5FA" };
+let CAPS = [];
+function buildCaptions() {
+  let wi = 0;
+  CAPS = CHUNKS.map(ch => {
+    const toks = ch.split(" ").map(tok => {
+      const [txt, n] = tok.split("|");
+      const k = +(n || 1);
+      const s = WORDS[wi].s, e = WORDS[wi + k - 1].e;
+      wi += k;
+      return { txt, s, e };
+    });
+    return { toks, s: toks[0].s, e: toks[toks.length - 1].e };
+  });
+  CAPS.forEach((c, i) => { c.show = c.s - .06; c.hide = i + 1 < CAPS.length ? CAPS[i + 1].s - .06 : 26.75; });
+}
+let capIdx = -2;
+const capBox = document.getElementById("capBox");
+function renderCaptions(t) {
+  const i = CAPS.findIndex(c => t >= c.show && t < c.hide);
+  const cap = document.getElementById("cap");
+  if (i < 0) { cap.style.opacity = 0; capIdx = -1; return; }
+  cap.style.opacity = 1;
+  const c = CAPS[i];
+  if (i !== capIdx) {
+    capBox.innerHTML = c.toks.map(k => `<span>${k.txt}</span>`).join("");
+    capIdx = i;
+  }
+  const q = eo(p(t, c.show, c.show + .16));
+  capBox.style.transform = `translateY(${(1 - q) * 18}px) scale(${.96 + .04 * q})`;
+  [...capBox.children].forEach((sp, j) => {
+    const k = c.toks[j];
+    const active = t >= k.s - .03 && t < k.e + .02;
+    const said = t >= k.s - .03;
+    const col = EMPH[k.txt] || "#F9FAFB";
+    sp.style.color = active ? (EMPH[k.txt] || "#F5C451") : col;
+    sp.style.opacity = said ? 1 : .45;
+    sp.style.transform = `scale(${active ? 1.07 : 1})`;
+  });
+}
+
+// ---------- page flips ----------
+const FLIPS = [[4.42, 4.86], [10.88, 11.40], [18.00, 18.40], [21.70, 22.22]];
+function renderPages(t) {
+  PAGES.forEach((pg, i) => {
+    const f = FLIPS[i];
+    const shade = pg.querySelector(".shade"), under = pg.querySelector(".under");
+    if (f && t >= f[1]) { pg.style.visibility = "hidden"; return; }
+    pg.style.visibility = "visible";
+    if (f && t >= f[0]) {
+      const q = eio(p(t, f[0], f[1]));
+      pg.style.transform = `rotateX(${q * 96}deg)`;
+      shade.style.opacity = q * .9;
+    } else { pg.style.transform = "none"; shade.style.opacity = 0; }
+    // shadow cast on this page while the page above it flips
+    const fa = FLIPS[i - 1];
+    under.style.opacity = fa && t >= fa[0] && t < fa[1] + .15 ? 1 - p(t, fa[0], fa[1] + .15) : 0;
+  });
+}
+
+// ---------- scenes ----------
+function scene1(t) {
+  write(els.p1title, t, .05, .6);
+  // STOP stamp slams, then lifts away
+  const sq = p(t, 0, .16);
+  const so = t < .95 ? 1 : 1 - p(t, .95, 1.15);
+  tf(els.stop, { s: lerp(1.9, 1, eo(sq)), r: -12, o: sq > 0 ? so * .95 : 0 });
+  const shake = t < .35 ? Math.sin(t * 90) * (1 - p(t, .1, .35)) * 6 : 0;
+  tf(els.res1, { x: shake, r: -2, o: 1 });
+  // "weak": sheet greys out a little
+  els.res1.style.filter = `saturate(${1 - p(t, 1.02, 1.3) * .8}) brightness(${1 - p(t, 1.02, 1.3) * .06})`;
+  els.res1lab.style.opacity = eo(p(t, .4, .8));
+  els.rowHead.style.opacity = eo(p(t, .9, 1.2));
+  els.rows.forEach((r, i) => {
+    const t0 = 1.0 + i * .26;
+    tf(r.row, { x: (1 - eo(p(t, t0 - .2, t0 + .15))) * -30, o: eo(p(t, t0 - .2, t0 + .15)) });
+    // a copy of the same resume flies from the sheet into the row
+    const q = eio(p(t, t0, t0 + .4));
+    const fromX = 490 - 140 - 350, fromY = 390 - (714 + i * 70);
+    tf(r.doc, { x: (1 - q) * (fromX + 140), y: (1 - q) * fromY, s: lerp(2.4, 1, q), r: (1 - q) * 25, o: q > 0 ? 1 : 0 });
+    pop(r.st, t, 2.72 + i * .27, .3, { r: -3 });
+  });
+  write(els.cb, t, 3.78, 4.1);
+  draw(els.cbCircle.querySelector("path"), t, 3.95, 4.35);
+}
+function scene2(t) {
+  write(els.p2title, t, 4.92, 5.6);
+  slide(els.res2, t, 4.9, 0, 60, .5);
+  els.res2.style.filter = `blur(${(1 - p(t, 4.9, 5.4)) * 6}px)`;
+  draw(document.getElementById("c1"), t, 6.3, 6.85);
+  draw(document.getElementById("c2"), t, 7.58, 8.05);
+  draw(document.getElementById("c3"), t, 8.28, 8.85);
+  [6.33, 7.61, 8.3].forEach((t0, i) => slide(els.notes[i], t, t0, 40, 0, .35, { r: -3 }));
+  // recruiter scan sweep
+  const sq = p(t, 9.3, 10.1);
+  const sVis = t >= 9.3 && t < 10.3 ? 1 - p(t, 10.1, 10.3) : 0;
+  tf(els.scan, { y: eio(sq) * 690, o: sVis });
+  tf(els.scanChip, { y: eio(sq) * 690, o: sVis });
+  const st = p(t, 10.22, 10.38);
+  tf(els.notSL, { s: lerp(1.8, 1, eo(st)), r: -9, o: st > 0 ? .95 : 0 });
+  els.res2.style.opacity = t > 10.22 ? 1 - p(t, 10.22, 10.5) * .35 : els.res2.style.opacity;
+  write(els.p2foot, t, 10.45, 10.85);
+}
+function scene3(t) {
+  write(els.p3title, t, 11.45, 12.25);
+  // cover drops in on "The Shortlist Code", then shrinks away for the contents
+  const cq = p(t, 12.37, 12.85);
+  const out = eio(p(t, 14.0, 14.35));
+  tf(els.cover, { s: lerp(1.35, 1, eo(cq)) * lerp(1, .32, out), r: lerp(8, -2, eo(cq)), o: cq > 0 ? 1 : 0,
+    x: out * -300, y: out * -270 });
+  if (t > 15.6) els.cover.style.opacity = 1 - p(t, 15.6, 15.9);
+  pop(els.sticker, t, 13.55, .4, { r: 12 });
+  if (t > 14.0) els.sticker.style.opacity = 1 - p(t, 14.0, 14.2);
+  write(els.byline, t, 13.5, 14.0);
+  if (t > 14.0) els.byline.style.opacity = 1 - p(t, 14.0, 14.2);
+  els.p3title.style.opacity = t > 14.0 ? 1 - p(t, 14.0, 14.2) : els.p3title.style.opacity;
+  // x6 templates grid
+  const gOut = p(t, 15.62, 15.95);
+  pop(els.x6, t, 14.22, .35, { r: -4 });
+  write(els.x6lab, t, 14.4, 15.15);
+  els.thumbs.forEach((o, i) => {
+    pop(o.th, t, 14.24 + i * .11, .36, { r: [-3, 1, 3, 2, -2, -1][i] });
+    if (gOut > 0) tf(o.th, { s: 1 - gOut * .3, y: gOut * 80, o: 1 - gOut, r: [-3, 1, 3, 2, -2, -1][i] });
+    if (i >= 3) o.inner.style.filter = "blur(7px)";
+  });
+  els.locks.forEach((lk, i) => pop(lk, t, 14.9 + i * .1, .3));
+  write(els.lockNote, t, 15.1, 15.55);
+  [els.x6, els.x6lab, els.lockNote].forEach(e => { if (gOut > 0) e.style.opacity = 1 - gOut; });
+  // "editable": type into first template
+  const name = "Your Name";
+  const n = Math.round(p(t, 14.45, 14.95) * name.length);
+  els.edit.textContent = name.slice(0, n) + (t > 14.4 && Math.floor(t * 4) % 2 === 0 ? "|" : "");
+  els.edit.style.opacity = t > 14.4 && t < 15.6 ? 1 : 0;
+  const cq1 = eo(p(t, 14.2, 14.55));
+  tf(els.cursor1, { x: lerp(500, 300, cq1), y: lerp(700, 440, cq1), o: t > 14.2 && t < 15.6 ? 1 : 0 });
+  // sample resumes
+  write(els.sTitle, t, 16.0, 16.45);
+  slide(els.sample, t, 15.98, -120, 0, .4, { r: -2 });
+  pop(els.sTab, t, 16.2, .3, { r: -2 });
+  els.sChecks.forEach((c, i) => pop(c, t, 16.35 + i * .15, .3));
+  write(els.gTitle, t, 17.0, 17.5);
+  els.guides.forEach((g, i) => slide(g, t, 17.05 + i * .2, 140, 0, .4, { r: [2, -1, 1][i] }));
+  write(els.more, t, 17.62, 17.95);
+}
+function scene4(t) {
+  write(els.p4title, t, 18.4, 19.0);
+  slide(els.jd, t, 18.38, 0, 50, .4);
+  els.jdBack.forEach((e, i) => {
+    const q = eo(p(t, 20.4 + i * .18, 20.7 + i * .18));
+    tf(e, { o: q, x: 0, y: 0 });
+  });
+  hilite(document.getElementById("k1"), t, 18.63, .25);
+  hilite(document.getElementById("k2"), t, 18.95, .25);
+  hilite(document.getElementById("k3"), t, 19.25, .25);
+  els.arrows.querySelectorAll(".arr").forEach((a, i) => draw(a, t, 19.45 + i * .1, 19.8 + i * .1));
+  slide(els.res4, t, 18.55, 0, 60, .4);
+  els.bul.forEach((b, i) => {
+    const t0 = 19.6 + i * .3;
+    b.strike.style.width = `${eo(p(t, t0, t0 + .18)) * b.w}px`;
+    const sw = p(t, t0 + .18, t0 + .34);
+    b.old.style.opacity = 1 - sw; b.strike.style.opacity = 1 - sw;
+    tf(b.nw, { x: (1 - eo(sw)) * 30, o: sw });
+    b.nw.querySelectorAll(".hl").forEach(h => hilite(h, t, t0 + .3, .25));
+  });
+  pop(els.match, t, 20.95, .4, { r: -3 });
+  write(els.p4foot, t, 20.45, 21.1);
+}
+function scene5(t) {
+  const hasRev = els.reviews.length > 0;
+  write(els.p5title, t, 22.45, 23.0);
+  const aOut = eio(p(t, 24.42, 24.7));
+  if (hasRev) {
+    els.form.style.opacity = 0; els.note.style.opacity = 0; els.cursor2.style.opacity = 0;
+    els.reviews.forEach((r, i) => { slide(r, t, 22.5 + i * .7, 0, 60, .45, { r: i ? 1.5 : -1.5 }); if (aOut > 0) r.style.opacity = 1 - aOut; });
+    els.p5title.textContent = "What buyers say…";
+  } else {
+    slide(els.form, t, 22.43, 0, 60, .45);
+    if (aOut > 0) tf(els.form, { y: -aOut * 120, o: 1 - aOut, s: 1 - aOut * .1 });
+    const mq = eio(p(t, 22.7, 23.7));
+    const press = t > 23.7 && t < 23.95 ? .9 : 1;
+    tf(els.cursor2, { x: lerp(860, 560, mq), y: lerp(1120, 700, mq), s: press, o: t > 22.6 && aOut < 1 ? 1 - aOut : 0 });
+    const nq = p(t, 23.95, 24.15);
+    tf(els.note, { s: lerp(1.6, 1, eo(nq)), r: 7, o: nq > 0 ? 1 - aOut : 0 });
+  }
+  if (aOut > 0) els.p5title.style.opacity = 1 - aOut;
+  // comment panel
+  const pq = eo(p(t, 24.5, 24.85));
+  const endQ = eio(p(t, 26.5, 26.85));
+  tf(els.panel, { y: (1 - pq) * 300 + endQ * 90, o: pq * (1 - endQ), s: 1 - endQ * .08 });
+  const word = "RESUME";
+  const n = Math.round(p(t, 24.88, 25.32) * word.length);
+  const typed = document.getElementById("typed");
+  const sent = t >= 25.42;
+  typed.textContent = sent ? "" : word.slice(0, n) + (Math.floor(t * 4) % 2 === 0 ? "|" : "");
+  if (!sent && n === 0) typed.innerHTML = `<span style="color:#6B7280;font-weight:600;letter-spacing:0">Add a comment…</span>`;
+  document.getElementById("sendDot").style.transform = `scale(${t > 25.32 && t < 25.45 ? .85 : 1})`;
+  slide(els.posted, t, 25.42, 0, 30, .3);
+  els.ghost.style.opacity = 1 - p(t, 25.4, 25.55);
+  pop(document.getElementById("heart"), t, 25.62, .3);
+  slide(els.dm, t, 25.72, 0, 70, .4);
+  // end card
+  els.endFan.forEach((e, i) => {
+    const q = p(t, 26.55 + i * .08, 26.95 + i * .08);
+    tf(e, { r: (i - 1) * 9 * eo(q), s: lerp(.7, 1, back(q)), o: eo(clamp(q * 2)) });
+  });
+  write(els.endCmt, t, 26.62, 26.95);
+  const wq = p(t, 26.8, 27.15);
+  const pulse = t > 27.4 ? 1 + .035 * Math.sin((t - 27.4) * 6) : 1;
+  tf(els.endWord, { s: lerp(.5, 1, back(wq)) * pulse, o: eo(clamp(wq * 2)) });
+  els.endSub.style.opacity = eo(p(t, 27.1, 27.4));
+  draw(els.endArrow.querySelector(".arr"), t, 27.2, 27.65);
+  const bob = t > 27.65 ? Math.sin((t - 27.65) * 5) * 8 : 0;
+  tf(els.endArrow, { x: bob * .4, y: bob, o: 1 });
+}
+
+function render(t) {
+  // gentle push-in per page keeps the frame alive without distracting
+  const segs = [0, 4.42, 10.88, 18.0, 21.7, T_END];
+  let k = 0; while (k < segs.length - 2 && t >= segs[k + 1]) k++;
+  const zq = p(t, segs[k], segs[k + 1]);
+  const endZ = t > 26.5 ? eio(p(t, 26.5, 27.2)) * .015 : 0;
+  document.getElementById("stage").style.transform = `scale(${1 + zq * .022 + endZ})`;
+  renderPages(t);
+  scene1(t); scene2(t); scene3(t); scene4(t); scene5(t);
+  renderCaptions(t);
+}
+
+window.boot = function (data) {
+  if (data) { WORDS = data.words || WORDS; REVIEWS = data.reviews || []; PREVIEWS = data.previews || []; }
+  build();
+  render(0);
+  return document.fonts.ready.then(() => Promise.all([...document.images].map(im => im.complete ? 1 : new Promise(r => { im.onload = im.onerror = r; })))).then(() => true);
+};
+window.render = render;
+</script>
+</body>
+</html>
